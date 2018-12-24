@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      #container {
+        position: relative;
+        width: 800px;
+        height: 600px;
+        background-color: lightgray;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script>
+      //工具对象
+      var Tools = {
+        getRandom: function(min, max) {
+          return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+      };
+      //方块对象---大小、颜色、位置
+      function Box(parent, options) {
+        options = options || {};
+        this.width = options.width || 20;
+        this.height = options.height || 20;
+        this.backgroundColor = options.backgroundColor || "red";
+        this.x = options.x || 0;
+        this.y = options.y || 0;
+
+        this.div = document.createElement("div");
+        parent.appendChild(this.div);
+        this.parent = parent;
+        this.init();
+      }
+      //初始化div样式
+      Box.prototype.init = function() {
+        var div = this.div;
+        div.style.width = this.width + "px";
+        div.style.height = this.height + "px";
+        div.style.backgroundColor = this.backgroundColor;
+        div.style.left = this.x + "px";
+        div.style.top = this.y + "px";
+        div.style.position = "absolute";
+      };
+      //随机生成坐标
+      Box.prototype.random = function() {
+        var x =
+          Tools.getRandom(0, this.parent.offsetWidth / this.width - 1) *
+          this.width;
+        var y =
+          Tools.getRandom(0, this.parent.offsetHeight / this.height - 1) *
+          this.height;
+          console.log(x,y)
+        this.div.style.left = x + "px";
+        this.div.style.top = y + "px";
+      };
+
+      //创建10个对象
+      var arr = [];
+      var container = document.getElementById("container");
+      for (var i = 0; i < 10; i++) {
+        //随机生成颜色
+        var r = Tools.getRandom(0, 255);
+        var g = Tools.getRandom(0, 255);
+        var b = Tools.getRandom(0, 255);
+        var box = new Box(container, {
+          backgroundColor: "rgb(" + r + "," + g + "," + b + ")"
+        });
+        arr.push(box);
+      }
+
+      setInterval(function() {
+        for (var i = 0; i < arr.length; i++) {
+          var box = arr[i];
+          box.random();
+        }
+      }, 500);
+    </script>
+    
+  </body>
+</html>
